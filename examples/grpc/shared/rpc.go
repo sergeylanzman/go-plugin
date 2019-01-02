@@ -24,6 +24,12 @@ func (m *RPCClient) Get(key string) ([]byte, error) {
 	return resp, err
 }
 
+func (m *RPCClient) Bench() string {
+	var resp []byte
+	_ = m.client.Call("Plugin.Bench", nil, &resp)
+	return string(resp)
+}
+
 // Here is the RPC server that RPCClient talks to, conforming to
 // the requirements of net/rpc
 type RPCServer struct {
@@ -39,4 +45,8 @@ func (m *RPCServer) Get(key string, resp *[]byte) error {
 	v, err := m.Impl.Get(key)
 	*resp = v
 	return err
+}
+
+func (m *RPCServer) Bench(args map[string]interface{}, resp *interface{}) string {
+	return m.Impl.Bench()
 }

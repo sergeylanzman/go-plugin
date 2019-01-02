@@ -5,6 +5,8 @@ import kv_pb2 as kv__pb2
 
 
 class KVStub(object):
+  # missing associated documentation comment in .proto file
+  pass
 
   def __init__(self, channel):
     """Constructor.
@@ -22,16 +24,34 @@ class KVStub(object):
         request_serializer=kv__pb2.PutRequest.SerializeToString,
         response_deserializer=kv__pb2.Empty.FromString,
         )
+    self.Bench = channel.unary_unary(
+        '/proto.KV/Bench',
+        request_serializer=kv__pb2.Empty.SerializeToString,
+        response_deserializer=kv__pb2.GetResponse.FromString,
+        )
 
 
 class KVServicer(object):
+  # missing associated documentation comment in .proto file
+  pass
 
   def Get(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def Put(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def Bench(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
@@ -48,6 +68,11 @@ def add_KVServicer_to_server(servicer, server):
           servicer.Put,
           request_deserializer=kv__pb2.PutRequest.FromString,
           response_serializer=kv__pb2.Empty.SerializeToString,
+      ),
+      'Bench': grpc.unary_unary_rpc_method_handler(
+          servicer.Bench,
+          request_deserializer=kv__pb2.Empty.FromString,
+          response_serializer=kv__pb2.GetResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

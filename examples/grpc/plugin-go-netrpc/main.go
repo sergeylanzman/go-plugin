@@ -21,6 +21,10 @@ func (KV) Get(key string) ([]byte, error) {
 	return ioutil.ReadFile("kv_" + key)
 }
 
+func (KV) Bench() string {
+	return "1"
+}
+
 func main() {
 	plugin.Serve(&plugin.ServeConfig{
 		HandshakeConfig: shared.Handshake,

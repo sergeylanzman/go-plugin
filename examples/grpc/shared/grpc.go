@@ -27,6 +27,15 @@ func (m *GRPCClient) Get(key string) ([]byte, error) {
 	return resp.Value, nil
 }
 
+func (m *GRPCClient) Bench() string {
+	resp, err := m.client.Bench(context.Background(), &proto.Empty{})
+	if err != nil {
+		return ""
+	}
+
+	return string(resp.Value)
+}
+
 // Here is the gRPC server that GRPCClient talks to.
 type GRPCServer struct {
 	// This is the real implementation
@@ -44,4 +53,8 @@ func (m *GRPCServer) Get(
 	req *proto.GetRequest) (*proto.GetResponse, error) {
 	v, err := m.Impl.Get(req.Key)
 	return &proto.GetResponse{Value: v}, err
+}
+func (m *GRPCServer) Bench(ctx context.Context, c *proto.Empty) (*proto.GetResponse, error) {
+	v := []byte(m.Impl.Bench())
+	return &proto.GetResponse{Value: v}, nil
 }

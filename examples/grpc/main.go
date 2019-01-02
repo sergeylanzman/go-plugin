@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/hashicorp/go-plugin"
 	"github.com/hashicorp/go-plugin/examples/grpc/shared"
@@ -14,6 +15,13 @@ import (
 func main() {
 	// We don't want to see the plugin logs.
 	log.SetOutput(ioutil.Discard)
+
+	// HACK////
+	pluginName := "kv"
+	if strings.Contains(os.Getenv("KV_PLUGIN"), "grpc") || strings.Contains(os.Getenv("KV_PLUGIN"), "python") {
+		pluginName = "kv_grpc"
+	}
+	// HACK////
 
 	// We're a host. Start by launching the plugin process.
 	client := plugin.NewClient(&plugin.ClientConfig{
@@ -33,12 +41,11 @@ func main() {
 	}
 
 	// Request the plugin
-	raw, err := rpcClient.Dispense("kv_grpc")
+	raw, err := rpcClient.Dispense(pluginName)
 	if err != nil {
 		fmt.Println("Error:", err.Error())
 		os.Exit(1)
 	}
-
 	// We should have a KV store now! This feels like a normal interface
 	// implementation but is in fact over an RPC connection.
 	kv := raw.(shared.KV)
@@ -64,5 +71,4 @@ func main() {
 		fmt.Printf("Please only use 'get' or 'put', given: %q", os.Args[0])
 		os.Exit(1)
 	}
-	os.Exit(0)
 }
